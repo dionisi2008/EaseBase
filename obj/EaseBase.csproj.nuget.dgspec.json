@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dioni\\Work\\EaseBase\\EaseBase.csproj": {}
+    "C:\\Users\\dioni\\Documents\\GitHub\\EaseBase\\EaseBase.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dioni\\Work\\EaseBase\\EaseBase.csproj": {
+    "C:\\Users\\dioni\\Documents\\GitHub\\EaseBase\\EaseBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dioni\\Work\\EaseBase\\EaseBase.csproj",
+        "projectUniqueName": "C:\\Users\\dioni\\Documents\\GitHub\\EaseBase\\EaseBase.csproj",
         "projectName": "EaseBase",
-        "projectPath": "C:\\Users\\dioni\\Work\\EaseBase\\EaseBase.csproj",
+        "projectPath": "C:\\Users\\dioni\\Documents\\GitHub\\EaseBase\\EaseBase.csproj",
         "packagesPath": "C:\\Users\\dioni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dioni\\Work\\EaseBase\\obj\\",
+        "outputPath": "C:\\Users\\dioni\\Documents\\GitHub\\EaseBase\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dioni\\AppData\\Roaming\\NuGet\\NuGet.Config"
