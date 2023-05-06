@@ -43,6 +43,20 @@ public class EaseBaseApi
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
     }
+
+     public string[] МножественноеЧтение(string[] СписокИндификаторов)
+    {
+        string ИндификаторыВОднуСтроку = string.Join('\n', СписокИндификаторов);
+        byte[] ИндификаторыВБайтовыйМассив = System.Text.UTF8Encoding.UTF8.GetBytes(ИндификаторыВОднуСтроку);
+        string ИндификаторыВБэйс64 = System.Convert.ToBase64String(ИндификаторыВБайтовыйМассив);
+        byte[] Запрос = new byte[1024];
+        System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " СчитатьДанные " + ИндификаторыВБэйс64 + '.').CopyTo(Запрос, 0);
+        List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
+        byte[] РезультатЗапросаВВидеБайт = КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
+        string РезультатЗапросаВВидеБайc64 = System.Convert.ToBase64String(РезультатЗапросаВВидеБайт);
+        System.Convert.FromBase64String
+        return ;
+    }
     public byte[] ПерезаписатьДанные(string ПолученныйИндификатор, byte[] ПолученныеДанныеДляЗаписи)
     {
         byte[] Запрос = new byte[1024];
