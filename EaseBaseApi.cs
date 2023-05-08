@@ -1,4 +1,6 @@
 using System;
+using System.Text.Encodings;
+using System.Text;
 
 public class EaseBaseApi
 {
@@ -21,16 +23,16 @@ public class EaseBaseApi
 
     public byte[] ЗаписьДанных(string ПолученныйИндификатор, byte[] ПолученныеДанныеДляЗаписи)
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " ЗаписьДанных " + ПолученныйИндификатор + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         КонечныйБайтовыйЗапросКСерверу.AddRange(ПолученныеДанныеДляЗаписи);
-        return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
+         return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
     }
 
     public string[] ЗапроситьСписокИндификаторов()
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " ЗапроситьСписокИндификаторов" + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         return System.Text.UTF8Encoding.UTF8.GetString(КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray())).Split('\n');
@@ -38,28 +40,34 @@ public class EaseBaseApi
 
     public byte[] СчитатьДанные(string ПолученныйИндификатор)
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " СчитатьДанные " + ПолученныйИндификатор + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
     }
 
-     public string[] МножественноеЧтение(string[] СписокИндификаторов)
+    public List<string[]> МножественноеЧтение(string[] СписокИндификаторов)
     {
+        List<string[]> ВызоднныеДанные = new List<string[]>();
         string ИндификаторыВОднуСтроку = string.Join('\n', СписокИндификаторов);
         byte[] ИндификаторыВБайтовыйМассив = System.Text.UTF8Encoding.UTF8.GetBytes(ИндификаторыВОднуСтроку);
         string ИндификаторыВБэйс64 = System.Convert.ToBase64String(ИндификаторыВБайтовыйМассив);
-        byte[] Запрос = new byte[1024];
-        System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " СчитатьДанные " + ИндификаторыВБэйс64 + '.').CopyTo(Запрос, 0);
+        byte[] Запрос = new byte[32768];
+        Console.WriteLine(System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " МножественноеЧтение " + ИндификаторыВБэйс64 + '.').Length);
+        System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " МножественноеЧтение " + ИндификаторыВБэйс64 + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         byte[] РезультатЗапросаВВидеБайт = КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
-        string РезультатЗапросаВВидеБайc64 = System.Convert.ToBase64String(РезультатЗапросаВВидеБайт);
-        System.Convert.FromBase64String
-        return ;
+        string РезультатЗапросавВидеТекста = Encoding.UTF8.GetString(РезультатЗапросаВВидеБайт);
+        string[] РезультатЗапросавВидеМассива = РезультатЗапросавВидеТекста.Split('\n');
+        for (int shag = 0; shag <= РезультатЗапросавВидеМассива.Length -1; shag++)
+        {
+            ВызоднныеДанные.Add(Encoding.UTF8.GetString(System.Convert.FromBase64String(РезультатЗапросавВидеМассива[shag])).Split('\n'));
+        }
+        return ВызоднныеДанные;
     }
     public byte[] ПерезаписатьДанные(string ПолученныйИндификатор, byte[] ПолученныеДанныеДляЗаписи)
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " ПерезаписатьДанные " + ПолученныйИндификатор + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         КонечныйБайтовыйЗапросКСерверу.AddRange(ПолученныеДанныеДляЗаписи);
@@ -68,7 +76,7 @@ public class EaseBaseApi
 
     public byte[] ПереименоватьИндификатор(string ПолученныйИсходныйИндификатор, string ПолученныйНовыйИндификатор)
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " ПереименоватьИндификатор " + ПолученныйИсходныйИндификатор + ' ' + ПолученныйНовыйИндификатор + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
@@ -76,10 +84,10 @@ public class EaseBaseApi
 
     public byte[] УдалитьДанные(string ПолученныйИндификатор)
     {
-        byte[] Запрос = new byte[1024];
+        byte[] Запрос = new byte[32768];
         System.Text.UTF8Encoding.UTF8.GetBytes(ЛогинКБазе + ' ' + ПарольКБазе + ' ' + ИмяБазы + " УдалитьДанные " + ПолученныйИндификатор + '.').CopyTo(Запрос, 0);
         List<byte> КонечныйБайтовыйЗапросКСерверу = new List<byte>(Запрос);
         return КлентДоХранилища.UploadData(СетевойАдресДоФайловогоХранилища, КонечныйБайтовыйЗапросКСерверу.ToArray());
-    }                      
-                             
+    }
+
 }
