@@ -7,6 +7,7 @@ namespace EaseBase
     {
         public ulong АЙДИ;
         public string ТипТаблицы;
+        public ulong ИндексПопулярностиСтраницы = 0;
 
         public virtual byte[] ТаблицаВВидеМассиваБайн()
         {
