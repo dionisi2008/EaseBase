@@ -18,6 +18,17 @@ namespace EaseBase
             СерверАпиДляЗапросов.Prefixes.Add("http://" + Настройки.ИмяХостаБазы  + ':' + 
             Настройки.ПортБазыДанных + "/");
             СерверАпиДляЗапросов.Start();
+            do
+            {
+
+            } while (СерверАпиДляЗапросов.IsListening == true);
+            ЧтениеНовогоЗапроса(СерверАпиДляЗапросов.GetContextAsync());
+
+        }
+        public async void ЧтениеНовогоЗапроса(Task<System.Net.HttpListenerContext> ПолученныйЗАпрос)
+        {
+            Console.WriteLine("Debug");
+            ПолученныйЗАпрос.Result.ToString();
         }
     }
 }
