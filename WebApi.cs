@@ -15,20 +15,45 @@ namespace EaseBase
         public ВебАпи(ServerBase ДоступКБазеДанных)
         {
             this.Настройки = ДоступКБазеДанных.ВыгрузкаНастроекБазы();
-            СерверАпиДляЗапросов.Prefixes.Add("http://" + Настройки.ИмяХостаБазы  + ':' + 
+            СерверАпиДляЗапросов.Prefixes.Add("http://" + Настройки.ИмяХостаБазы + ':' +
             Настройки.ПортБазыДанных + "/");
             СерверАпиДляЗапросов.Start();
             do
             {
-
+                ЧтениеНовогоЗапроса(СерверАпиДляЗапросов.GetContextAsync());
             } while (СерверАпиДляЗапросов.IsListening == true);
-            ЧтениеНовогоЗапроса(СерверАпиДляЗапросов.GetContextAsync());
+
 
         }
         public async void ЧтениеНовогоЗапроса(Task<System.Net.HttpListenerContext> ПолученныйЗАпрос)
         {
-            Console.WriteLine("Debug");
-            ПолученныйЗАпрос.Result.ToString();
+            byte[] Запрос = new byte[1024];
+            byte[] ОработанныйЗапрос = new byte[ПолученныйЗАпрос.Result.Request.InputStream.Read(Запрос, 0, 1024)];
+            ОработанныйЗапрос = Запрос.ToList().GetRange(0, ОработанныйЗапрос.Length).ToArray();
+
+
+            string[] ПреобразованныйЗапросВТекст = Encoding.UTF8.GetString(ОработанныйЗапрос).Split('\n');
+            List<string> ВыходныеДанные = new List<string>();
+            for (int shag = 0; shag <= ПреобразованныйЗапросВТекст.Length - 1; shag++)
+            {
+                if (ПреобразованныйЗапросВТекст[shag] != "")
+                {
+                    ВыходныеДанные.Add(ПреобразованныйЗапросВТекст[shag]);
+                }
+
+            }
+            System.Console.WriteLine(string.Join('\n', ВыходныеДанные.ToArray()));
+            switch (ВыходныеДанные[0])
+            {
+                case "Запрос":
+                    switch (ВыходныеДанные[1])
+                    {
+                        case "Настройки Сервера Базы":
+                            
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }
