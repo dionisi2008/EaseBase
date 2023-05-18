@@ -42,27 +42,29 @@ namespace EaseBase
                 }
 
             }
-            System.Console.WriteLine(string.Join('\n', ВыходныеДанные.ToArray()));
-            switch (ВыходныеДанные[0])
+            System.Console.WriteLine(DateTime.Now.ToString() + " "  + string.Join('\n', ВыходныеДанные.ToArray()));
+            if (ВыходныеДанные.Count > 0)
             {
-                case "Запрос":
-                    switch (ВыходныеДанные[1])
-                    {
-                        case "Настройки Сервера Базы":
-                            List<string> ДанныеДляЗаписи = new List<string>();
-                            ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
-                            ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
-                            ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
-                            ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
-                            ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
-                            byte[] ВременныеТекстовыеДанные = Encoding.UTF8.GetBytes(string.Join('\n', ДанныеДляЗаписи.ToArray()));
-                            ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВременныеТекстовыеДанные, 0, ВременныеТекстовыеДанные.Length);
-                            ПолученныйЗАпрос.Result.Response.OutputStream.Close();
-                            ПолученныйЗАпрос.Result.Response.Close();
-                            break;
-                    }
-                    break;
+                switch (ВыходныеДанные[0])
+                {
+                    case "Запрос":
+                        switch (ВыходныеДанные[1])
+                        {
+                            case "Настройки Сервера Базы":
+                                List<string> ДанныеДляЗаписи = new List<string>();
+                                ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
+                                ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
+                                ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
+                                ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
+                                ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
+                                 await new StreamWriter(ПолученныйЗАпрос.Result.Response.OutputStream).WriteAsync(string.Join('\n', ДанныеДляЗаписи.ToArray()));
+
+                                break;
+                        }
+                        break;
+                }
             }
+            ПолученныйЗАпрос.Result.Response.Close();
         }
     }
 }
