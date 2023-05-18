@@ -49,7 +49,16 @@ namespace EaseBase
                     switch (ВыходныеДанные[1])
                     {
                         case "Настройки Сервера Базы":
-                            
+                            List<string> ДанныеДляЗаписи = new List<string>();
+                            ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
+                            ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
+                            ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
+                            ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
+                            ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
+                            byte[] ВременныеТекстовыеДанные = Encoding.UTF8.GetBytes(string.Join('\n', ДанныеДляЗаписи.ToArray()));
+                            ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВременныеТекстовыеДанные, 0, ВременныеТекстовыеДанные.Length);
+                            ПолученныйЗАпрос.Result.Response.OutputStream.Close();
+                            ПолученныйЗАпрос.Result.Response.Close();
                             break;
                     }
                     break;
