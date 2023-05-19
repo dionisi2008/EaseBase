@@ -27,42 +27,54 @@ namespace EaseBase
         }
         public async void ЧтениеНовогоЗапроса(Task<System.Net.HttpListenerContext> ПолученныйЗАпрос)
         {
-            byte[] Запрос = new byte[1024];
-            byte[] ОработанныйЗапрос = new byte[ПолученныйЗАпрос.Result.Request.InputStream.Read(Запрос, 0, 1024)];
-            ОработанныйЗапрос = Запрос.ToList().GetRange(0, ОработанныйЗапрос.Length).ToArray();
-
-
-            string[] ПреобразованныйЗапросВТекст = Encoding.UTF8.GetString(ОработанныйЗапрос).Split('\n');
-            List<string> ВыходныеДанные = new List<string>();
-            for (int shag = 0; shag <= ПреобразованныйЗапросВТекст.Length - 1; shag++)
+            if (ПолученныйЗАпрос.Result.Request.HttpMethod == "POST")
             {
-                if (ПреобразованныйЗапросВТекст[shag] != "")
-                {
-                    ВыходныеДанные.Add(ПреобразованныйЗапросВТекст[shag]);
-                }
+                byte[] Запрос = new byte[1024];
+                byte[] ОработанныйЗапрос = new byte[ПолученныйЗАпрос.Result.Request.InputStream.Read(Запрос, 0, 1024)];
+                ОработанныйЗапрос = Запрос.ToList().GetRange(0, ОработанныйЗапрос.Length).ToArray();
 
+
+                string[] ПреобразованныйЗапросВТекст = Encoding.UTF8.GetString(ОработанныйЗапрос).Split("\n");
+                List<string> ВыходныеДанные = new List<string>();
+                for (int shag = 0; shag <= ПреобразованныйЗапросВТекст.Length - 1; shag++)
+                {
+                    if (ПреобразованныйЗапросВТекст[shag] != "")
+                    {
+                        ВыходныеДанные.Add(ПреобразованныйЗапросВТекст[shag]);
+                    }
+
+                }
+                // System.Console.WriteLine(DateTime.Now.ToString() + " "  + string.Join('\n', ВыходныеДанные.ToArray()));
+                if (ВыходныеДанные.Count > 0)
+                {
+                    switch (ВыходныеДанные[0])
+                    {
+                        case "Запрос":
+                            switch (ВыходныеДанные[1])
+                            {
+                                case "Настройки Сервера Базы":
+                                    List<string> ДанныеДляЗаписи = new List<string>();
+                                    ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
+                                    ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
+                                    ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
+                                    ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
+                                    ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
+                                    byte[] ВыходнныеДанные = Encoding.UTF8.GetBytes(
+                                        string.Join('\n', ДанныеДляЗаписи.ToArray())
+                                    );
+                                    ПолученныйЗАпрос.Result.Response.ContentLength64 = ВыходнныеДанные.Length;
+                                    ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВыходнныеДанные, 0, ВыходнныеДанные.Length);
+                                    break;
+                            }
+                            break;
+                    }
+                }
             }
-            System.Console.WriteLine(DateTime.Now.ToString() + " "  + string.Join('\n', ВыходныеДанные.ToArray()));
-            if (ВыходныеДанные.Count > 0)
+            else
             {
-                switch (ВыходныеДанные[0])
-                {
-                    case "Запрос":
-                        switch (ВыходныеДанные[1])
-                        {
-                            case "Настройки Сервера Базы":
-                                List<string> ДанныеДляЗаписи = new List<string>();
-                                ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
-                                ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
-                                ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
-                                ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
-                                ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
-                                 await new StreamWriter(ПолученныйЗАпрос.Result.Response.OutputStream).WriteAsync(string.Join('\n', ДанныеДляЗаписи.ToArray()));
-
-                                break;
-                        }
-                        break;
-                }
+                Console.WriteLine("Type " + ПолученныйЗАпрос.Result.Request.HttpMethod);
+                ПолученныйЗАпрос.Result.Response.ContentLength64 = 1024;
+                ПолученныйЗАпрос.Result.Response.OutputStream.Write(new ReadOnlySpan<byte>(new byte[1024]));
             }
             ПолученныйЗАпрос.Result.Response.Close();
         }
