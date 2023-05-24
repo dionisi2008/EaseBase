@@ -50,15 +50,25 @@ namespace EaseBase
                     switch (ВыходныеДанные[0])
                     {
                         case "Запрос":
+                            List<string> ДанныеДляЗаписи = new List<string>();
+                            List<byte> ВыходнныеДанные = new List<byte>();
                             switch (ВыходныеДанные[1])
                             {
                                 case "Настройки Сервера Базы":
-                                    List<string> ДанныеДляЗаписи = new List<string>();
+                                    ВыходнныеДанные.
                                     ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
                                     ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
                                     ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
                                     ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
                                     ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
+                                    ВыходнныеДанные = new byte[] Encoding.UTF8.GetBytes(
+                                        string.Join('\n', ДанныеДляЗаписи.ToArray())
+                                    );
+                                    ПолученныйЗАпрос.Result.Response.ContentLength64 = ВыходнныеДанные.Length;
+                                    ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВыходнныеДанные, 0, ВыходнныеДанные.Length);
+                                    break;
+                                case "Список Пользователей":
+
                                     byte[] ВыходнныеДанные = Encoding.UTF8.GetBytes(
                                         string.Join('\n', ДанныеДляЗаписи.ToArray())
                                     );
@@ -77,6 +87,10 @@ namespace EaseBase
                 ПолученныйЗАпрос.Result.Response.OutputStream.Write(new ReadOnlySpan<byte>(new byte[1024]));
             }
             ПолученныйЗАпрос.Result.Response.Close();
+        }
+        public byte[] ВыводДанныхВБайтовомМассиве(string ПолученныеДанные)
+        {
+            return Encoding.UTF8.GetBytes(ПолученныеДанные);
         }
     }
 }
