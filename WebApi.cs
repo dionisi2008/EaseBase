@@ -51,29 +51,30 @@ namespace EaseBase
                     {
                         case "Запрос":
                             List<string> ДанныеДляЗаписи = new List<string>();
-                            List<byte> ВыходнныеДанные = new List<byte>();
                             switch (ВыходныеДанные[1])
                             {
                                 case "Настройки Сервера Базы":
-                                    ВыходнныеДанные.
                                     ДанныеДляЗаписи.Add(this.Настройки.ИмяХостаБазы);
                                     ДанныеДляЗаписи.Add(this.Настройки.ПортБазыДанных.ToString());
                                     ДанныеДляЗаписи.Add(this.Настройки.СозданиеЛогов.ToString());
                                     ДанныеДляЗаписи.Add(this.Настройки.ПутьДляЛогФайла);
                                     ДанныеДляЗаписи.Add(this.Настройки.РазмерХранилищаТаблиц.ToString());
-                                    ВыходнныеДанные = new byte[] Encoding.UTF8.GetBytes(
+                                    byte[] ВыходнныеДанные = Encoding.UTF8.GetBytes(
                                         string.Join('\n', ДанныеДляЗаписи.ToArray())
                                     );
                                     ПолученныйЗАпрос.Result.Response.ContentLength64 = ВыходнныеДанные.Length;
                                     ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВыходнныеДанные, 0, ВыходнныеДанные.Length);
                                     break;
                                 case "Список Пользователей":
-
-                                    byte[] ВыходнныеДанные = Encoding.UTF8.GetBytes(
+                                    ДанныеДляЗаписи = new List<string>();
+                                    
+                                    byte[] ВыходнныеДанные2 = Encoding.UTF8.GetBytes(
                                         string.Join('\n', ДанныеДляЗаписи.ToArray())
                                     );
-                                    ПолученныйЗАпрос.Result.Response.ContentLength64 = ВыходнныеДанные.Length;
-                                    ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВыходнныеДанные, 0, ВыходнныеДанные.Length);
+                                    ПолученныйЗАпрос.Result.Response.ContentLength64 = ВыходнныеДанные2.Length;
+                                    ПолученныйЗАпрос.Result.Response.OutputStream.Write(ВыходнныеДанные2, 0, ВыходнныеДанные2.Length);
+                                    break;
+                                case "sd":
                                     break;
                             }
                             break;
