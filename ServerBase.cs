@@ -116,7 +116,7 @@ namespace EaseBase
                                 ПервичнаяТаблица.Add(new Таблица(ВременныйЭлемент));
                                 СводТаблиц.Add(ВременныйЭлемент[1], ПервичнаяТаблица);
                             }
-                            
+
                             break;
                     }
                 }
@@ -222,8 +222,12 @@ namespace EaseBase
             {
                 for (int shag2 = 0; shag2 <= СводТаблиц[СводТаблиц.Keys.ToArray()[shag1]].ToArray().Length - 1; shag2++)
                 {
-                    ПредположительныйСлучайныйИндификатор = ((ulong)new Random(DateTime.Now.Millisecond + shag1 + shag2).NextInt64());
-                    shag1 = 0;
+                    if (СводТаблиц[СводТаблиц.Keys.ToArray()[shag1]].ToArray()[shag2].АЙДИ == ПредположительныйСлучайныйИндификатор)
+                    {
+                        ПредположительныйСлучайныйИндификатор = ((ulong)new Random(DateTime.Now.Millisecond + shag1 + shag2).NextInt64());
+                        shag1 = 0;
+                    }
+
                 }
             }
 
