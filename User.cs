@@ -17,8 +17,13 @@ namespace EaseBase
             this.СписокСессий = ПолученныйСписокСессий;
         }
         public Пользователь(string ПолученныйЛогин, string ПолученныйПароль)
-        => (Логин, Пароль, base.ТипТаблицы) = (ПолученныйЛогин, ПолученныйПароль,
-        "Пользователь");
+        {
+            Логин = ПолученныйЛогин;
+            Пароль = ПолученныйПароль;
+            base.ТипТаблицы = "Пользователь";
+            this.СписокСессий = new List<string>();
+        }
+
 
         public override byte[] ТаблицаВВидеМассиваБайн()
         {
@@ -27,7 +32,16 @@ namespace EaseBase
             ВыходнныеДанные.Add(base.ТипТаблицы);
             ВыходнныеДанные.Add(Логин);
             ВыходнныеДанные.Add(Пароль);
-            ВыходнныеДанные.Add(Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join('\n', СписокСессий.ToArray()))));
+            if (СписокСессий.ToArray().Length >= 1)
+            {
+                ВыходнныеДанные.Add(Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Join('\n', СписокСессий.ToArray()))));
+            }
+            else
+            {
+                ВыходнныеДанные.Add(Convert.ToBase64String(Encoding.UTF8.GetBytes("not")));
+                Console.WriteLine("Нет Сессий к записи");
+            }
+
             return Encoding.UTF8.GetBytes(string.Join('\n', ВыходнныеДанные));
         }
     }
