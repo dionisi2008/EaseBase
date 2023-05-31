@@ -68,15 +68,15 @@ namespace EaseBase
                                     string[] ДанныеДляРегистрации = ВыходныеДанные[2].Split(' ');
                                     if (this.БазаДанных.ПоискПользователяВБазе(ДанныеДляРегистрации[0]))
                                     {
-                                        СобщениеНаВыход = "Позьзователь с таким Логином, уже есть в базе";
+                                        СобщениеНаВыход = "Позьзователь с таким Логином, или Email уже есть в базе";
                                     }
                                     else
                                     {
                                         this.БазаДанных.СозданиеПользователя(new Пользователь(ДанныеДляРегистрации[0], ДанныеДляРегистрации[1]));
-                                        СобщениеНаВыход = "Позьзователь Успешно Зарегестрирован!";
-                                        ПолученныйЗАпрос.Result.Response.ContentLength64 = Encoding.UTF8.GetBytes(СобщениеНаВыход).Length;
-                                        ПолученныйЗАпрос.Result.Response.OutputStream.Write(Encoding.UTF8.GetBytes(СобщениеНаВыход), 0, Encoding.UTF8.GetBytes(СобщениеНаВыход).Length);
+                                        СобщениеНаВыход = "Позьзователь Успешно Зарегестрирован!";                                        
                                     }
+                                    ПолученныйЗАпрос.Result.Response.ContentLength64 = Encoding.UTF8.GetBytes(СобщениеНаВыход).Length;
+                                        ПолученныйЗАпрос.Result.Response.OutputStream.Write(Encoding.UTF8.GetBytes(СобщениеНаВыход), 0, Encoding.UTF8.GetBytes(СобщениеНаВыход).Length);
                                     break;
                             }
                             // (логина, пароля, email и т.д.);
